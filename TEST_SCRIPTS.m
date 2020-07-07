@@ -889,7 +889,7 @@ h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 % consider the directional distribution, and relate to the SHD. In the case
 % of a single source of power $P_s$ and an ideal diffuse field of power $P_d$, 
 % diffuseness $\psi$ is directly related to the direct-to-diffuse ratio (DDR) 
-% $\Gamma = P_s/P_d$, with the relation $\psi = P_d/(Ps+Pd) = 1/(1+\Gamma)$. 
+% $\Gamma = P_s/P_d$, with the relation $\psi = P_d/(P_s+P_d) = 1/(1+\Gamma)$. 
 % In the case of multiple sources $P_i$, an ideal diffuseness can be defined 
 % as $\psi = P_d/(P_d + \sum_i P_i)$ and DDR as $\Gamma = \sum_i P_i/P_d$.
 % Diffuseness is useful in a number of tasks - for acoustic analysis, for 
