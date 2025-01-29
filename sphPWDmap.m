@@ -44,7 +44,11 @@ end
 % peak finding, if asked
 if nargout==2 && nargin==3
     
-    kappa  = 20; % Von-Mises concentration factor
+    % Von-Mises concentration factor
+    % kappa  = 20; 
+    % mtm: make adaptive with SH order with an empirical approximation:
+    kappa  = 10 * (order+1);
+
     P_minus_peak = P_pwd;
     est_dirs = zeros(nSrc, 2);
     for k = 1:nSrc
@@ -54,6 +58,21 @@ if nargout==2 && nargin==3
         VM_mask = kappa/(2*pi*exp(kappa)-exp(-kappa)) * exp(kappa*grid_xyz*VM_mean'); % VM distribution
         VM_mask = 1./(0.00001+VM_mask); % inverse VM distribution
         P_minus_peak = P_minus_peak.*VM_mask;
+    end
+
+    % mtm: if there are 2 sources, re-estimate the first peak with the
+    % second removed. Could also work for more sources, but would need more
+    % testing/tweaking.
+    if(nSrc == 2)
+        P_minus_peak = P_pwd.*VM_mask;
+        for k = 1:1
+            [~, peak_idx] = max(P_minus_peak);
+            est_dirs(k,:) = grid_dirs(peak_idx,:);
+            VM_mean = grid_xyz(peak_idx,:); % orientation of VM distribution
+            VM_mask = kappa/(2*pi*exp(kappa)-exp(-kappa)) * exp(kappa*grid_xyz*VM_mean'); % VM distribution
+            VM_mask = 1./(0.00001+VM_mask); % inverse VM distribution
+            P_minus_peak = P_minus_peak.*VM_mask;
+        end
     end
 end
 
