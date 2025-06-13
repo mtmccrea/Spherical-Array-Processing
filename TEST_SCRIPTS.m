@@ -724,13 +724,15 @@ grid_dirs = grid2dirs(5,5,0,0); % Grid of directions to evaluate DoA estimation
 % the SH signals, and for low orders is also low.
 
 % signal modeling
-order = 3;
+order = 1;
 nSH = (order+1)^2;
-src_dirs = [0 0; pi/2 0; pi pi/4];
+% src_dirs = [0 0; pi/2 0; pi pi/4];
+src_dirs = [0 0; deg2rad(50) 0];
 nSrc = size(src_dirs,1);
 Y_src = getSH(order, aziElev2aziPolar(src_dirs), 'real');
 stVec = Y_src';
-P_src = diag([1 1 1]); % unit powers for the three sources
+% P_src = diag([1 1 1]); % unit powers for the three sources
+P_src = diag([0.99 1]); % unit powers for the three sources
 P_diff = 1; % unit power for the diffuse sound
 sphCOV = stVec*P_src*stVec' + P_diff*eye(nSH)/(4*pi);
 % DoA estimation
@@ -745,6 +747,7 @@ line_args = {'linestyle','none','marker','x','color','r', 'linewidth',1.5,'marke
 line(est_dirs_pwd(:,1), est_dirs_pwd(:,2), line_args{:});
 xlabel('Azimuth (deg)'), ylabel('Elevation (deg)'), title('PWD DoA, o: true directions, x: estimated')
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+
 %%
 
 %%% ---MVDR power map
@@ -766,7 +769,7 @@ P_src = diag([1 1 1]); % unit powers for the three sources
 P_diff = 1; % unit power for the diffuse sound
 sphCOV = stVec*P_src*stVec' + P_diff*eye(nSH)/(4*pi);
 % DoA estimation
-[P_mvdr, est_dirs_mvdr] = sphMVDRmap(sphCOV, grid_dirs, nSrc);
+[P_mvdr, est_dirs_mvdr] = sphMVDRmap(sphCOV, grid_dirs, 3);
 est_dirs_mvdr = est_dirs_mvdr*180/pi;
 % plots results
 plotDirectionalMapFromGrid(P_mvdr, 5, 5, [], 0, 0);
@@ -811,6 +814,7 @@ line_args = {'linestyle','none','marker','x','color','r', 'linewidth',1.5,'marke
 line(est_dirs_music(:,1), est_dirs_music(:,2), line_args{:});
 xlabel('Azimuth (deg)'), ylabel('Elevation (deg)'), title('MUSIC DoA, o: true directions, x: estimated')
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+
 %%
 
 %%% ---Intensity vector DoA estimation
